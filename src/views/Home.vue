@@ -1,18 +1,41 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <h1>Home</h1>
+    <div v-if="error">{{ error }}</div>
+    <div v-if="posts.length">
+      <PostList :posts="posts" />
+    </div>
+    <div v-else>Loading...</div>
+
+    <div class="copytext-box">
+      <p>{{ copyme }}</p>
+      <input ref="copyinput" type="text" class="copyinput" v-model="copyme" />
+      <button class="copy-btn" @click="handleCopy">Copy</button>
+    </div>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import { ref } from "vue";
+import PostList from "../components/PostList.vue";
+import getPosts from "../composables/getPosts.js";
 
 export default {
-  name: 'Home',
+  name: "Home",
   components: {
-    HelloWorld
-  }
-}
+    PostList,
+  },
+  setup() {
+    const { posts, error, load } = getPosts();
+    load();
+    const copyme = ref();
+    const copyinput = ref(copyme);
+    const handleCopy = () => {
+      navigator.clipboard.writeText(copyinput.value);
+      alert("Copied: " + copyinput.value);
+    };
+
+    return { posts, error, copyme, handleCopy };
+  },
+};
 </script>
