@@ -10,7 +10,9 @@
     <div class="copytext-box">
       <p>{{ copyme }}</p>
       <input ref="copyinput" type="text" class="copyinput" v-model="copyme" />
-      <button class="copy-btn" @click="handleCopy">Copy</button>
+      <button class="copy-btn" @click="handleCopy">
+        {{ copied ? "Copied" : "Copy" }}
+      </button>
     </div>
   </div>
 </template>
@@ -28,14 +30,19 @@ export default {
   setup() {
     const { posts, error, load } = getPosts();
     load();
+    const copied = ref(false);
     const copyme = ref();
     const copyinput = ref(copyme);
     const handleCopy = () => {
       navigator.clipboard.writeText(copyinput.value);
-      alert("Copied: " + copyinput.value);
+      // alert("Copied: " + copyinput.value);
+      copied.value = true;
+      setTimeout(() => {
+        copied.value = false;
+      }, 2000);
     };
 
-    return { posts, error, copyme, handleCopy };
+    return { posts, error, copyme, copied, handleCopy };
   },
 };
 </script>
