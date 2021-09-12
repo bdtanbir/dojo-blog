@@ -10,7 +10,10 @@
     <div class="copytext-box">
       <p>{{ copyme }}</p>
       <input ref="copyinput" type="text" class="copyinput" v-model="copyme" />
-      <button class="copy-btn" @click="handleCopy">
+      <button
+        :class="copied ? 'disabled copy-btn' : 'copy-btn'"
+        @click="handleCopy"
+      >
         {{ copied ? "Copied" : "Copy" }}
       </button>
     </div>
@@ -31,7 +34,7 @@ export default {
     const { posts, error, load } = getPosts();
     load();
     const copied = ref(false);
-    const copyme = ref();
+    const copyme = ref(null);
     const copyinput = ref(copyme);
     const handleCopy = () => {
       navigator.clipboard.writeText(copyinput.value);
